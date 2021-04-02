@@ -1,3 +1,10 @@
 export default () => ({
-  prosits: []
+  prosits: [],
+  displayProsit: {
+    keywords: [],
+    constraints: [],
+    problematics: [],
+    hypotesies: [],
+    summary: []
+  }
 })

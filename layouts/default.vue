@@ -100,7 +100,7 @@
         </v-menu>-->
         <v-list color="background" dense rounded class="mr-8">
           <v-menu open-on-hover bottom offset-y>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-list-item
                 v-bind="attrs"
                 v-on="on"
@@ -181,7 +181,7 @@
           <v-list-item-title class="font-weight-light" v-text="item.title" />
         </v-list-item>
       </v-list>
-      <template v-slot:append>
+      <template #append>
         <v-btn
           v-if="drawer"
           large
@@ -260,6 +260,10 @@ export default {
       if (resp) {
         this.$store.dispatch('team/fetchCurrentTeam', { token: this.$auth.getToken('local'), num: resp.numProsit })
       }
+    })
+
+    this.socket = this.$nuxtSocket({
+      name: 'main'
     })
   }
 }

@@ -1,3 +1,6 @@
 export default () => ({
-  kivaferkoi: []
+  kivaferkoi: {
+    picked: [],
+    notYetPicked: []
+  }
 })

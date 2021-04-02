@@ -21,19 +21,31 @@
           </v-card-title>
           <v-card-text>
             <v-list color="secondary">
-              <v-list-item v-for="(item, i) in kivaferkoi.picked" :key="i">
-                <v-list-item-avatar>
-                  <v-img class="avatar" :src="item.avatar ? item.avatar : avatar" />
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ item.name }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.surname }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+              <template v-for="(item, i) in picked">
+                <v-list-item :key="i">
+                  <v-list-item-avatar>
+                    <v-img class="avatar" :src="item.avatar ? item.avatar : avatar" />
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ item.name }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      {{ item.surname }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <!--<v-autocomplete
+                  :key="'combobox' + i"
+                  v-model="item.pickedSummary"
+                  :items="prositSummary"
+                  flat
+                  solo
+                  background-color="background"
+                  @change="emit({ action: 'select', item: item.pickedSummary, user: item })"
+                  @click:clear="emit({action: 'remove', item: item.pickedSummary, user: item})"
+                />-->
+              </template>
             </v-list>
           </v-card-text>
         </v-card>
@@ -107,7 +119,10 @@ export default {
       windowSize: {
         x: 0,
         y: 1
-      }
+      },
+      pickedSummary: [],
+      temp: '',
+      choosenSummary: ''
     }
   },
   computed: {
@@ -117,12 +132,96 @@ export default {
       }
     },
 
+    picked: {
+      get () {
+        return this.$store.state.kivaferkoi.kivaferkoi.picked
+      },
+
+      set (value) {
+        console.log(value)
+        this.$store.dispatch('kivaferkoi/update', { token: this.$auth.getToken('local', value) })
+      }
+    },
+
+    numProsit: {
+      get () {
+        return this.$store.getters['conf/conf'].numProsit
+      }
+    },
+
+    prositSummary: {
+      get () {
+        if (this.numProsit) {
+          const out = []
+          // On récupère le prosit
+          this.$store.getters['prosit/prosits']
+            .filter(item => item.prositNumber === this.numProsit)[0].summary
+            // On récupère uniquement les parties incluant une etude
+            .filter(item => item.toLowerCase().includes('etude'))
+            // On copie ce tableau pour pouvoir le changer a loisir
+            .slice()
+            .forEach((item) => {
+              out.push({ text: item, value: item, disabled: false })
+            })
+          return out
+        }
+        return []
+      }
+    },
+
     avatar () {
       return process.env.api_url + '/images/user_homme.svg'
     }
   },
   mounted () {
+    this.socket = this.$nuxtSocket({
+      name: 'main'
+    })
 
+    // On ecoute le chanel kivaferkoi
+    this.socket.on('kivaferkoi', (data) => {
+      // On récupère le PA a update
+      const index = this.prositSummary.findIndex((item) => {
+        return item.value === data.item
+      })
+      // Dans le cas du delete l'item est null mais on doit eviter ce cas de figure
+      if (data.item !== null) {
+        // Dans le cas d'un select
+        if (data.action === 'select') {
+          // Si notre tableau temporaire n'a pas encore l'user
+          if (this.pickedSummary.filter(item => item.user === data.user._id).length === 0) {
+            // On ajoute l'user a notre tableau temporaire
+            this.pickedSummary.push({
+              user: data.user._id,
+              value: data.item
+            })
+            // On disable pour les autres ce PA
+            this.prositSummary[index].disabled = true
+          } else {
+            // Dans le cas ou notre user à déjà fais un choix
+            // On récupère notre objet avec l'ancienne partie qu'il avait choisie
+            const tempIndex = this.pickedSummary.findIndex((item) => {
+              return item.user === data.user._id
+            })
+
+            // On recupère maintenant l'index de l'array princpal correspondant à l'ancienne partie choisie
+            const tempIndex2 = this.prositSummary.findIndex((item) => {
+              return item.value === this.pickedSummary[tempIndex].value
+            })
+
+            // On rend l'ancienne partie de nouveau disponbile
+            this.prositSummary[tempIndex2].disabled = false
+            // On rend le nouveau choix indisponible
+            this.prositSummary[index].disabled = true
+            // On update le tableau temporaire pour le prochain choix
+            this.pickedSummary[data.user._id].value = data.item
+          }
+        } else {
+          // Dans le cas ou c'est un remove on rend simplement la partie disponible à nouveau
+          this.prositSummary[index].disabled = false
+        }
+      }
+    })
   },
   methods: {
     /**
@@ -134,6 +233,10 @@ export default {
 
     shuffle () {
       this.$store.dispatch('kivaferkoi/shuffle', { size: this.toPick, token: this.$auth.getToken('local') })
+    },
+
+    emit (data) {
+      this.socket.emit('kivaferkoi', data)
     }
   }
 }

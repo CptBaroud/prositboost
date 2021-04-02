@@ -20,5 +20,15 @@ export default {
 
     // On le modifie
     state.prosits[index].keywords[keywordIndex].def = data.keyword.def
+  },
+
+  updateDisplayprosit (state, data) {
+    console.log(data)
+    if (!data.action) {
+      state.displayProsit[data.type] = data.data
+    } else {
+      state.displayProsit[data.type] = data.array
+    }
+    console.log(state.displayProsit)
   }
 }

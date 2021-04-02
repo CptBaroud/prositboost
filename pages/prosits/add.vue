@@ -8,12 +8,6 @@
         >
           <v-card-title class="text-h4 pt-8 d-flex justify-end" style="color: var(--v-text-base)">
             Créer un prosit
-            <v-btn
-              color="primary"
-              @click="emitMessage('Hello')"
-            >
-              test
-            </v-btn>
           </v-card-title>
         </v-card>
       </v-col>
@@ -65,7 +59,7 @@
                 flat
                 solo
                 style="max-width: 414px"
-                @keypress.enter="pushElement(addProsit.keywords, addKeyword, 'addKeyword')"
+                @keypress.enter="pushElement(addProsit.keywords, addKeyword, 'addKeyword', 'keywords')"
               />
 
               <v-text-field
@@ -76,6 +70,7 @@
                 solo
                 style="max-width: 414px"
                 :rules="[rules.required]"
+                @keydown="emitMessage({type: 'context', data: addProsit.context})"
               />
 
               <v-row style="padding-top: 0">
@@ -88,11 +83,11 @@
                     flat
                     solo
                     @keydown.enter.exact.prevent=""
-                    @keyup.enter.exact="pushElement(addProsit.contraints, addConstraints, 'addConstraints')"
+                    @keyup.enter.exact="pushElement(addProsit.constraints, addConstraints, 'addConstraints', 'constraints')"
                   />
                 </v-col>
                 <v-col cols="7">
-                  <v-list v-if="addProsit.contraints.length > 0" color="background">
+                  <v-list v-if="addProsit.constraints.length > 0" color="background">
                     <v-list-item>
                       <v-list-item-content />
                       <v-list-item-action>
@@ -106,7 +101,7 @@
                         </v-btn>
                       </v-list-item-action>
                     </v-list-item>
-                    <template v-for="(item, i) in addProsit.contraints">
+                    <template v-for="(item, i) in addProsit.constraints">
                       <v-list-item v-if="!editConstraints" :key="i">
                         <v-list-item-content>
                           <v-list-item-title>
@@ -114,7 +109,7 @@
                           </v-list-item-title>
                         </v-list-item-content>
                         <v-list-item-action>
-                          <v-btn icon small color="primary" @click="removeElement(addProsit.contraints, i)">
+                          <v-btn icon small color="primary" @click="removeElement(addProsit.constraints, i, 'constraints')">
                             <v-icon>
                               mdi-close
                             </v-icon>
@@ -124,7 +119,7 @@
                       <v-text-field
                         v-else
                         :key="i"
-                        v-model="addProsit.contraints[i]"
+                        v-model="addProsit.constraints[i]"
                         flat
                         solo
                         background-color="secondary"
@@ -142,6 +137,7 @@
                 solo
                 style="max-width: 414px"
                 :rules="[rules.required]"
+                @keydown="emitMessage({type: 'generalization', data: addProsit.generalization})"
               />
 
               <v-row style="padding-top: 0">
@@ -155,7 +151,7 @@
                     flat
                     solo
                     @keydown.enter.exact.prevent=""
-                    @keyup.enter.exact="pushElement(addProsit.problematics, addProblematics, 'addProblematics')"
+                    @keyup.enter.exact="pushElement(addProsit.problematics, addProblematics, 'addProblematics', 'problematics')"
                   />
                 </v-col>
                 <v-col cols="7">
@@ -174,14 +170,14 @@
                       </v-list-item-action>
                     </v-list-item>
                     <template v-for="(item, i) in addProsit.problematics">
-                      <v-list-item v-if="!editConstraints" :key="i">
+                      <v-list-item v-if="!editProblematics" :key="i">
                         <v-list-item-content>
                           <v-list-item-title>
                             {{ item }}
                           </v-list-item-title>
                         </v-list-item-content>
                         <v-list-item-action>
-                          <v-btn icon small color="primary" @click="removeElement(addProsit.problematics, i)">
+                          <v-btn icon small color="primary" @click="removeElement(addProsit.problematics, i, 'problematics')">
                             <v-icon>
                               mdi-close
                             </v-icon>
@@ -211,7 +207,7 @@
                     flat
                     solo
                     @keydown.enter.exact.prevent=""
-                    @keyup.enter.exact="pushElement(addProsit.hypotesies, addHypothesies, 'addHypothesies')"
+                    @keyup.enter.exact="pushElement(addProsit.hypotesies, addHypothesies, 'addHypothesies', 'hypotesies')"
                   />
                 </v-col>
                 <v-col cols="7">
@@ -237,7 +233,7 @@
                           </v-list-item-title>
                         </v-list-item-content>
                         <v-list-item-action>
-                          <v-btn icon small color="primary" @click="removeElement(addProsit.hypotesies, i)">
+                          <v-btn icon small color="primary" @click="removeElement(addProsit.hypotesies, i, 'hypotesies')">
                             <v-icon>
                               mdi-close
                             </v-icon>
@@ -267,7 +263,7 @@
                     flat
                     solo
                     @keydown.enter.exact.prevent=""
-                    @keyup.enter.exact="pushElement(addProsit.summary, addSummary, 'addSummary')"
+                    @keyup.enter.exact="pushElement(addProsit.summary, addSummary, 'addSummary', 'summary')"
                   />
                 </v-col>
                 <v-col cols="7">
@@ -322,7 +318,7 @@
                         <v-list-item-action>
                           <v-icon
                             color="primary"
-                            @click="removeElement(addProsit.summary, i)"
+                            @click="removeElement(addProsit.summary, i, 'summary')"
                           >
                             mdi-close
                           </v-icon>
@@ -361,8 +357,7 @@ export default {
 
     if (isNotScribe && isNotAdmin) {
       if (store.$toast) {
-        store.$toast.warning('L\'accès à cette page est reservée aux administrateurs et à l\'actuel scribe pour l\'instant')
-        redirect('/')
+        redirect('/prosits/see')
       }
     }
   },
@@ -385,7 +380,7 @@ export default {
       addPrositValid: false,
       addProsit: {
         keywords: [],
-        contraints: [],
+        constraints: [],
         problematics: [],
         hypotesies: [],
         summary: []
@@ -398,6 +393,12 @@ export default {
     }
   },
   computed: {
+    prosit: {
+      get () {
+        return this.$store.getters['prosit/prosits']
+      }
+    },
+
     scrollbarTheme () {
       return this.$vuetify.theme.dark ? 'dark' : 'light'
     }
@@ -409,7 +410,7 @@ export default {
     })
 
     // Pour l'instant on garde mais uniquement a des fin de test
-    this.socket.on('news', (msg) => {
+    this.socket.on('prosit', (msg) => {
       console.log(msg)
     })
   },
@@ -419,21 +420,18 @@ export default {
     },
 
     emitMessage (data) {
-      this.socket.emit('prosit', 'Hello')
+      this.socket.emit('prosit', data)
     },
 
-    pushElement (array, element, ref) {
-      this.emitMessage({ type: 'push', array, element }).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e)
-      })
+    pushElement (array, element, ref, type) {
       array.push(element)
+      this.emitMessage({ action: 'push', type, array, element })
       this.$data[ref] = ''
     },
 
-    removeElement (array, elementIndex) {
-      this.emitMessage({ type: 'remove', array, elementIndex })
+    removeElement (array, elementIndex, type) {
       array.splice(elementIndex, 1)
+      this.emitMessage({ action: 'remove', type, array, elementIndex })
     },
 
     createProsit () {
@@ -441,6 +439,9 @@ export default {
       const prosit = this.addProsit
       // On ajoute l'auteur
       prosit.author = this.$auth.user._id
+      // Numéro du prosit (on est dans un tableau donc pour eviter d'avoir un
+      // Prosit en 0 on fait +1 et encore +1 pour calculer le numéro du prochain)
+      prosit.prositNumber = this.prosits.length + 2
 
       // Si tout les champs sont valide
       if (this.$refs.addPrositForm.validate()) {

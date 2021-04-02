@@ -38,5 +38,27 @@ export default {
           reject(e)
         })
     })
+  },
+
+  update (context, data) {
+    console.log(data)
+    const token = data.token
+    delete data.token
+
+    return new Promise((resolve, reject) => {
+      axios.put(process.env.api_url + '/kivaferkoi/', data.value, {
+        headers: {
+          authorization: token
+        }
+      })
+        .then((response) => {
+          context.commit('editPicked', response.data)
+          resolve(response)
+        }).catch((e) => {
+        // eslint-disable-next-line no-console
+          console.error(e)
+          reject(e)
+        })
+    })
   }
 }

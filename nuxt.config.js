@@ -76,7 +76,9 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseUrl: 'http://localhost:3000'
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
@@ -110,7 +112,8 @@ export default {
       login: '/login',
       logout: '/login',
       user: '/profile',
-      callback: '/login'
+      callback: '/login',
+      home: '/'
     }
   },
 

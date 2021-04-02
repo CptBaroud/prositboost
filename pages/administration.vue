@@ -24,7 +24,7 @@
               height="450"
               item-height="75"
             >
-              <template v-slot:default="{ item }">
+              <template #default="{ item }">
                 <v-list-item :key="item._id" color="primary">
                   <v-list-item-content>
                     <v-list-item-title>
@@ -34,7 +34,7 @@
                   <v-list-item-action>
                     <v-row class="avatars">
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.animateur.avatar ? item.animateur.avatar : avatar" />
                           </v-avatar>
@@ -42,7 +42,7 @@
                         <span>Animateur : {{ item.animateur.name }}</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.scribe.avatar ? item.scribe.avatar : avatar" />
                           </v-avatar>
@@ -50,7 +50,7 @@
                         <span>Scribe : {{ item.scribe.name }}</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.secretaire.avatar ? item.secretaire.avatar : avatar" />
                           </v-avatar>
@@ -58,7 +58,7 @@
                         <span>Secretaire : {{ item.secretaire.name }}</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.gestionaire.avatar ? item.gestionaire.avatar : avatar" />
                           </v-avatar>
@@ -82,11 +82,19 @@
             Conf
           </v-card-title>
           <v-card-text>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Numéro du prosit
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
             <v-text-field
               v-model="numProsit"
+              label="Numéro du prosit"
+              background-color="background"
               flat
               solo
-              background-color="secondary"
             />
           </v-card-text>
         </v-card>
@@ -100,14 +108,21 @@
             Utilisateurs
           </v-card-title>
           <v-card-text>
-            <v-virtual-scroll
+            <v-text-field
+              v-model="userSearch"
+              solo
+              flat
+              background-color="background"
+            />
+            <v-data-iterator
               :class="scrollbarTheme"
               :items="users"
-              item-height="80"
+              :search="userSearch"
               height="450"
+              hide-default-footer
             >
-              <template v-slot:default="{ item }">
-                <v-list-item :key="item._id">
+              <template #default="{ items }">
+                <v-list-item v-for="item in items" :key="item._id">
                   <v-list-item-avatar size="64">
                     <v-img class="avatar" :src="item.avatar ? item.avatar : avatar" />
                   </v-list-item-avatar>
@@ -125,7 +140,7 @@
                   </v-list-item-content>
                 </v-list-item>
               </template>
-            </v-virtual-scroll>
+            </v-data-iterator>
           </v-card-text>
         </v-card>
       </v-col>
@@ -153,7 +168,9 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      userSearch: ''
+    }
   },
   computed: {
     teams: {
