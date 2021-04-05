@@ -441,7 +441,7 @@ export default {
       prosit.author = this.$auth.user._id
       // Numéro du prosit (on est dans un tableau donc pour eviter d'avoir un
       // Prosit en 0 on fait +1 et encore +1 pour calculer le numéro du prochain)
-      prosit.prositNumber = this.prosits.length + 2
+      prosit.prositNumber = this.prosits ? this.prosits.length + 2 : 0
 
       // Si tout les champs sont valide
       if (this.$refs.addPrositForm.validate()) {
