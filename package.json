@@ -19,7 +19,7 @@
     "core-js": "^3.9.1",
     "docx": "^5.5.0",
     "file-saver": "^2.0.5",
-    "nuxt": "^2.15.3",
+    "nuxt": "^2.15.4",
     "nuxt-socket-io": "^1.1.15",
     "vue-toastification": "^1.7.11",
     "vuedraggable": "^2.24.3"
