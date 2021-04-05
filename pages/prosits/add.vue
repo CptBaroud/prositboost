@@ -451,7 +451,7 @@ export default {
         })
           .then((response) => {
             // la reponse prend du temps à arriver donc on bloque le boutton
-            this.addPrositValid = false
+            this.addPrositValid = true
             if (response.status === 200) {
               this.$router.push('/')
             }
