@@ -163,7 +163,7 @@
               :items-per-page="3"
               :page="prositsPage"
             >
-              <template v-slot:item="data">
+              <template #item="data">
                 <v-hover
                   v-slot="{ hover }"
                 >
@@ -232,7 +232,7 @@
                   </v-card>
                 </v-hover>
               </template>
-              <template v-slot:footer>
+              <template #footer>
                 <v-pagination
                   v-model="prositsPage"
                   color="primary"
