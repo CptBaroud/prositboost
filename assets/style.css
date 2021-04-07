@@ -1,0 +1,59 @@
+.selected {
+  color: #E44634 !important;
+}
+
+.theme--dark.v-list-item--active:hover::before, .theme--dark.v-list-item--active::before {
+  opacity: 0 !important;
+}
+
+.theme--light.v-list-item--active:hover::before, .theme--light.v-list-item--active::before {
+  opacity: 0 !important;
+}
+
+.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+  margin-right: 15px !important;
+}
+
+.mytable .v-table tbody tr:not(:last-child) {
+  border-bottom: none !important;
+}
+
+.rounded-card {
+  border-radius: 25px !important;
+}
+
+>>> .v-dialog {
+  box-shadow: none;
+}
+
+@media  (max-width: 600px){
+  .card_login_background_dark {
+    background-size: 0;
+    background-position: right 21% bottom 75%
+  }
+
+  .card_login_background_light {
+    background-size: 0;
+    background-position: right 21% bottom 75%
+  }
+}
+
+/*
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #3D4364 inset;
+  color: #FFFFFF;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+input:-webkit-autofill:hover,
+textarea:-webkit-autofill:hover,
+select:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0px 1000px #4F5472 inset;
+  color: #FFFFFF;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+} */
+

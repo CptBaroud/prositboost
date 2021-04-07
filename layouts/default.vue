@@ -24,8 +24,8 @@
         </v-icon>
       </v-btn>
       <template v-if="$auth.loggedIn">
-        <!--<v-menu open-on-hover bottom offset-y max-height="300">
-          <template v-slot:activator="{ on, attrs }">
+        <v-menu open-on-hover bottom offset-y max-height="300">
+          <template #activator="{ on, attrs }">
             <v-badge
               :content="notification.filter(item => !item.info.seen).length"
               style="border-color: var(v--background-color)"
@@ -43,51 +43,19 @@
               </v-icon>
             </v-badge>
           </template>
-          <v-list rounded color="secondary" max-width="375">
+          <v-list max-width="375">
             <template v-for="(item, a) in notification">
-              <v-list-item
+              <notification
+                :id="item._id"
                 :key="a"
                 router
+                :name="item.author.name"
+                :icon="item.info.icon"
                 :to="item.to"
-                @mouseover="!item.info.seen ? markNotificationAsSeen(item._id) : null"
-                @click="markNotificationAsRead(item._id)"
-              >
-                <v-badge
-                  v-if="!item.info.seen"
-                  class="pr-2"
-                  inline
-                  left
-                  dot
-                  color="greenPastel"
-                />
-                <v-list-item-avatar style="border: solid var(--v-primary-base) 2px">
-                  <v-img v-if="item.author.avatar" :src="item.author.avatar" />
-                  <v-icon v-else>
-                    mdi-account
-                  </v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content class="pl-2">
-                  <v-list-item-subtitle>
-                    {{ item.author.name }} - <span class="text--secondary">Le {{ new Date(item.created).toLocaleDateString('fr-FR', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric'
-                  })
-                    }}
-                    </span>
-                  </v-list-item-subtitle>
-                  <v-list-item-title>
-                    {{ item.title }}
-                  </v-list-item-title>
-                </v-list-item-content>
-                <v-list-item-icon>
-                  <v-icon>
-                    {{ item.info.icon }}
-                  </v-icon>
-                </v-list-item-icon>
-              </v-list-item>
+                :created="item.created"
+                :title="item.title"
+                :avatar="item.author.avatar"
+              />
             </template>
             <v-list-item to="/notifications" class="d-flex justify-center">
               <v-list-item-content>
@@ -97,7 +65,7 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-        </v-menu>-->
+        </v-menu>
         <v-list color="background" dense rounded class="mr-8">
           <v-menu open-on-hover bottom offset-y>
             <template #activator="{ on, attrs }">
@@ -206,7 +174,12 @@
 </template>
 
 <script>
+import notification from '@/components/notification'
+
 export default {
+  components: {
+    notification
+  },
   data () {
     return {
       miniVariant: false,
@@ -215,7 +188,7 @@ export default {
       items: [
         {
           icon: 'mdi-home',
-          title: 'Home',
+          title: 'Accueil',
           to: '/'
         },
         {
@@ -243,6 +216,12 @@ export default {
     }
   },
   computed: {
+    notification: {
+      get () {
+        return this.$store.getters['notification/notification'].filter(item => item.seen === false)
+      }
+    },
+
     logo () {
       return this.$vuetify.theme.dark ? process.env.api_url + '/images/logodark.svg' : process.env.api_url + '/images/logolight.svg'
     },
@@ -252,18 +231,77 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('prosit/fetch', this.$auth.getToken('local'))
-    this.$store.dispatch('kivaferkoi/fetch', this.$auth.getToken('local'))
-    this.$store.dispatch('user/fetch', this.$auth.getToken('local'))
-    this.$store.dispatch('team/fetch', this.$auth.getToken('local'))
-    this.$store.dispatch('conf/fetch', this.$auth.getToken('local')).then((resp) => {
-      if (resp) {
-        this.$store.dispatch('team/fetchCurrentTeam', { token: this.$auth.getToken('local'), num: resp.numProsit })
-      }
-    })
+    if (this.$auth.loggedIn) {
+      this.$store.dispatch('prosit/fetch', this.$auth.getToken('local'))
+      this.$store.dispatch('kivaferkoi/fetch', this.$auth.getToken('local'))
+      this.$store.dispatch('user/fetch', this.$auth.getToken('local'))
+      this.$store.dispatch('team/fetch', this.$auth.getToken('local'))
+      this.$store.dispatch('notification/fetch', {
+        token: this.$auth.getToken('local'),
+        user: this.$auth.user._id
+      })
+      this.$store.dispatch('conf/fetch', this.$auth.getToken('local')).then((resp) => {
+        if (resp.numProsit) {
+          this.$store.dispatch('team/fetchCurrentTeam', {
+            token: this.$auth.getToken('local'),
+            num: resp.numProsit
+          })
+        }
+      })
+    }
 
     this.socket = this.$nuxtSocket({
       name: 'main'
+    })
+
+    this.socket.on('connection', (data) => {
+      console.log(data)
+    })
+
+    // Pour chaques event de type contact on recharge les notifications
+    this.socket.on('notification', (data) => {
+      if (data.doc.receiver._id === this.$auth.user._id) {
+        this.$toast.info(data.doc.title)
+        /* this.$toast({
+          component: notification,
+          props: {
+            name: data.doc.author.name,
+            icon: data.doc.info.icon,
+            to: data.doc.to,
+            created: data.doc.created,
+            title: data.doc.title,
+            avatar: data.doc.author.avatar,
+            _id: data.doc._id,
+            seen: false
+          }
+        }) */
+      }
+      this.$store.dispatch('notification/fetch', { token: this.$auth.getToken('local'), user: this.$auth.user._id })
+    })
+
+    this.socket.on('kivaferkoi', (data) => {
+      if (data.action === 'fetch') {
+        this.$store.dispatch('kivaferkoi/fetch', {
+          token: this.$auth.getToken('local')
+        })
+      }
+    })
+
+    this.socket.on('prosit', (data) => {
+      if (data.action === 'fetch') {
+        this.$store.dispatch('prosit/fetch', {
+          token: this.$auth.getToken('local')
+        })
+      }
+    })
+
+    this.socket.on('numProsit', (data) => {
+      if (data.action === 'fetch') {
+        this.$store.dispatch('team/fetchCurrentTeam', {
+          token: this.$auth.getToken('local'),
+          numProsit: data.numProsit
+        })
+      }
     })
   }
 }

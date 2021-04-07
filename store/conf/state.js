@@ -1,4 +1,6 @@
 export default () => ({
-  conf: {},
+  conf: {
+    numProsit: 0
+  },
   addTeamModal: false
 })

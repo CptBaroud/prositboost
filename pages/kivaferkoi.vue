@@ -138,7 +138,6 @@ export default {
       },
 
       set (value) {
-        console.log(value)
         this.$store.dispatch('kivaferkoi/update', { token: this.$auth.getToken('local', value) })
       }
     },
@@ -232,7 +231,21 @@ export default {
     },
 
     shuffle () {
-      this.$store.dispatch('kivaferkoi/shuffle', { size: this.toPick, token: this.$auth.getToken('local') })
+      this.$store.dispatch('kivaferkoi/shuffle', { size: this.toPick, token: this.$auth.getToken('local') }).then((response) => {
+        if (response.status === 200) {
+          for (const item in Object.entries(response.data.picked)) {
+            this.$store.dispatch('notification/create', {
+              token: this.$auth.getToken('local'),
+              type: 2,
+              icon: 'mdi-account-group',
+              author: this.$auth.user,
+              receiver: response.data.picked[item]._id,
+              title: 'Tu as été tiré au sort pour faire une partie',
+              to: '/kivaferkoi'
+            })
+          }
+        }
+      })
     },
 
     emit (data) {

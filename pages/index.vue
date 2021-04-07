@@ -18,10 +18,23 @@
                 <span v-if="currentTeam.animateur._id === $auth.user._id">
                   Tu es animateur sur ce prosit
                 </span>
+                <span v-else-if="currentTeam.gestionaire._id === $auth.user._id">
+                  Tu es gestionaire sur ce prosit
+                </span>
+                <span v-else-if="currentTeam.scribe._id === $auth.user._id">
+                  Tu es scribe sur ce prosit
+                </span>
+                <span v-else-if="currentTeam.secretaire._id === $auth.user._id">
+                  Tu es secretaire sur ce prosit
+                </span>
                 <span v-else>
                   Tu n'as pas de role pour ce prosit
                 </span>
-                <br> et tu n'as pas de partie à faire
+                <br>
+                <span v-if="kivaferkoi.picked.filter(item => item._id === $auth.user._id).length > 0">
+                  et tu as une partie à faire pour ce prosit
+                </span>
+                <span v-else>et tu n'as pas de partie à faire</span>
               </v-card-text>
               <v-card-actions class="my-4">
                 <v-btn
@@ -59,10 +72,10 @@
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title class="text-md-h5">
-                      Equipe n°1
+                      Equipe n°{{ conf.numProsit % 9 }}
                     </v-list-item-title>
                     <v-list-item-subtitle class="text-md-h6 text--secondary">
-                      Prosit 1
+                      Prosit {{ conf.numProsit }}
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>

@@ -79,9 +79,7 @@ export default {
         }
       })
         .then((response) => {
-          if (response.status === 200) {
-            this.$toast.success('Tu as été connecté avec succès')
-          } else {
+          if (response.status !== 200) {
             this.$toast.error(response.data.message)
           }
         })
