@@ -35,7 +35,7 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <!--<v-autocomplete
+                <v-autocomplete
                   :key="'combobox' + i"
                   v-model="item.pickedSummary"
                   :items="prositSummary"
@@ -44,7 +44,7 @@
                   background-color="background"
                   @change="emit({ action: 'select', item: item.pickedSummary, user: item })"
                   @click:clear="emit({action: 'remove', item: item.pickedSummary, user: item})"
-                />-->
+                />
               </template>
             </v-list>
           </v-card-text>
@@ -134,7 +134,7 @@ export default {
 
     picked: {
       get () {
-        return this.$store.state.kivaferkoi.kivaferkoi.picked
+        return this.$store.getters['kivaferkoi/picked']
       },
 
       set (value) {

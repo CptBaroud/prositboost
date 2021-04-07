@@ -167,69 +167,11 @@
                 <v-hover
                   v-slot="{ hover }"
                 >
-                  <v-card
-                    rounded="lg"
-                    class="my-4"
-                    style="transition: background-color 0.2s ease-in-out"
-                    :color="hover ? 'primary' : 'background'"
-                    :elevation="hover ? 6 : 0"
-                  >
-                    <v-card-text style="padding-bottom: 0">
-                      <template v-for="(item, i) in data.item.keywords">
-                        <v-chip
-                          v-if="i <= 2"
-                          :key="i"
-                          color="accent"
-                          label
-                          :class="i === 0 ? 'mr-2' : 'mx-2'"
-                          class="my-1"
-                        >
-                          {{ item.name }}
-                        </v-chip>
-                      </template>
-                      <v-chip
-                        v-if="data.item.keywords.length >= 2 && data.item.keywords.length >= 3"
-                        color="secondary"
-                        label
-                        class="ml-2"
-                      >
-                        + {{ data.item.keywords.length - 3 }} autres ...
-                      </v-chip>
-                      <v-list-item>
-                        <v-list-item-content>
-                          <v-list-item-title class="mb-2">
-                            {{ data.item.title }}
-                          </v-list-item-title>
-                          <v-list-item-subtitle style="display: inline-block" class="text-truncate">
-                            {{ data.item.context }}
-                          </v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-card-text>
-                    <v-card-actions style="padding-top: 0">
-                      <v-list-item>
-                        <v-list-item-avatar>
-                          <v-img v-if="data.item.author.avatar" :src="data.item.author.avatar" />
-                          <v-img v-else :src="avatar" />
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                          <v-list-item-title>
-                            {{ data.item.author.name }} {{ data.item.author.surname }}
-                          </v-list-item-title>
-                        </v-list-item-content>
-                        <v-list-item-action>
-                          <v-btn
-                            v-if="hover"
-                            text
-                            :to="'/prosits/' + data.item._id"
-                            nuxt
-                          >
-                            En voir plus
-                          </v-btn>
-                        </v-list-item-action>
-                      </v-list-item>
-                    </v-card-actions>
-                  </v-card>
+                  <prositCard
+                    :hover="hover"
+                    :item="data.item"
+                    background="background"
+                  />
                 </v-hover>
               </template>
               <template #footer>
@@ -316,6 +258,7 @@
 </template>
 
 <script>
+import prositCard from '@/components/prositCard'
 import { saveAs } from 'file-saver'
 import {
   Document,
@@ -331,6 +274,9 @@ import {
 
 export default {
   name: 'Id',
+  components: {
+    prositCard
+  },
   data () {
     return {
       keyword: {

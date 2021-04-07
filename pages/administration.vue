@@ -131,7 +131,7 @@
                       {{ item.name }} <span class="text--secondary"> {{ item.surname }} </span>
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                      <v-btn v-if="!item.password" x-small icon @click="createAccount(item._id)">
+                      <v-btn v-if="item._id !== $auth.user._id" x-small icon @click="createAccount(item._id)">
                         <v-icon>
                           mdi-mail
                         </v-icon>

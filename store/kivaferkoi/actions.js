@@ -41,7 +41,6 @@ export default {
   },
 
   update (context, data) {
-    console.log(data)
     const token = data.token
     delete data.token
 

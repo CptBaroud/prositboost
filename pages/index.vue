@@ -68,7 +68,7 @@
                   <v-list-item-action>
                     <v-row class="avatars">
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="currentTeam.animateur.avatar ? currentTeam.animateur.avatar : avatar" />
                           </v-avatar>
@@ -76,7 +76,7 @@
                         <span>Animateur : {{ currentTeam.animateur.name }}</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="currentTeam.scribe.avatar ? currentTeam.scribe.avatar : avatar" />
                           </v-avatar>
@@ -84,7 +84,7 @@
                         <span>Scribe : {{ currentTeam.scribe.name }}</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="currentTeam.secretaire.avatar ? currentTeam.secretaire.avatar : avatar" />
                           </v-avatar>
@@ -92,7 +92,7 @@
                         <span>Secretaire : {{ currentTeam.secretaire.name }}</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="currentTeam.gestionaire.avatar ? currentTeam.gestionaire.avatar : avatar" />
                           </v-avatar>
@@ -141,7 +141,7 @@
                   <v-list-item-action>
                     <v-row class="avatars">
                       <v-tooltip v-for="(item, i) in kivaferkoi.picked" :key="i" bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.avatar ? item.avatar : avatar" />
                           </v-avatar>
@@ -185,7 +185,7 @@
                   <v-list-item-action>
                     <v-row class="avatars">
                       <v-tooltip v-for="(item, i) in kivaferkoi.notYetPicked" :key="i" bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.avatar ? item.avatar : avatar" />
                           </v-avatar>
@@ -229,7 +229,7 @@
                   <v-list-item-action>
                     <v-row class="avatars">
                       <v-tooltip v-for="(item, i) in kivaferkoi.alreadyPicked" :key="i" bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template #activator="{ on, attrs }">
                           <v-avatar class="avatars__item" v-bind="attrs" v-on="on">
                             <v-img class="avatar" :src="item.avatar ? item.avatar : avatar" />
                           </v-avatar>
@@ -299,72 +299,15 @@
               :items="prosits"
               :items-per-page="5"
             >
-              <template v-slot:item="data">
+              <template #item="data">
                 <v-hover
                   v-slot="{ hover }"
                 >
-                  <v-card
-                    rounded="lg"
-                    class="my-4"
-                    style="transition: background-color 0.2s ease-in-out"
-                    :color="hover ? 'primary' : 'background'"
-                    :elevation="hover ? 6 : 0"
-                  >
-                    <v-card-text style="padding-bottom: 0">
-                      <template v-for="(item, i) in data.item.keywords">
-                        <v-chip
-                          v-if="i <= 2"
-                          :key="i"
-                          color="accent"
-                          label
-                          class="my-1 mr-3"
-                        >
-                          {{ item.name }}
-                        </v-chip>
-                      </template>
-                      <v-chip
-                        v-if="data.item.keywords.length >= 2 && data.item.keywords.length >= 3"
-                        color="secondary"
-                        label
-                        style="color: var(--var-text-base)"
-                      >
-                        + {{ data.item.keywords.length - 3 }} autres ...
-                      </v-chip>
-                      <v-list-item>
-                        <v-list-item-content>
-                          <v-list-item-title class="mb-2">
-                            {{ data.item.title }}
-                          </v-list-item-title>
-                          <v-list-item-subtitle style="display: inline-block" class="text-truncate">
-                            {{ data.item.context }}
-                          </v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-card-text>
-                    <v-card-actions style="padding-top: 0">
-                      <v-list-item>
-                        <v-list-item-avatar>
-                          <v-img v-if="data.item.author.avatar" :src="data.item.author.avatar" />
-                          <v-img v-else :src="avatar" />
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                          <v-list-item-title>
-                            {{ data.item.author.name }} {{ data.item.author.surname }}
-                          </v-list-item-title>
-                        </v-list-item-content>
-                        <v-list-item-action>
-                          <v-btn
-                            v-if="hover"
-                            text
-                            :to="'/prosits/' + data.item._id"
-                            nuxt
-                          >
-                            En voir plus
-                          </v-btn>
-                        </v-list-item-action>
-                      </v-list-item>
-                    </v-card-actions>
-                  </v-card>
+                  <prositCard
+                    :hover="hover"
+                    :item="data.item"
+                    background="background"
+                  />
                 </v-hover>
               </template>
             </v-data-iterator>
@@ -376,7 +319,11 @@
 </template>
 
 <script>
+import prositCard from '@/components/prositCard'
 export default {
+  components: {
+    prositCard
+  },
   data () {
     return {
       teamDisplay: false
