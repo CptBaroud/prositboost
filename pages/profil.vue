@@ -130,6 +130,7 @@
                             v-model="changePasswordItem.new"
                             :disabled="!canChangePassword"
                             background-color="background"
+                            type="password"
                             flat
                             solo
                             :rules="[
@@ -143,6 +144,7 @@
                             v-model="changePasswordItem.verifyNew"
                             :disabled="!canChangePassword"
                             background-color="background"
+                            type="password"
                             :rules="[
                               v => v === changePasswordItem.new || 'Les mots de passes ne sont pas les memes'
                             ]"
