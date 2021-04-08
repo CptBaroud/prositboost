@@ -79,7 +79,9 @@ export default {
         }
       })
         .then((response) => {
-          if (response.status !== 200) {
+          if (response.status === 200 && this.$route.name !== '/') {
+            this.$router.push('/')
+          } else if (response.status !== 200) {
             this.$toast.error(response.data.message)
           }
         })
