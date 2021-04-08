@@ -148,8 +148,8 @@ export default {
           pantoneGreen: '#53A548'
         },
         light: {
-          background: '#F9F9FB',
-          secondary: '#FFFFFF',
+          background: '#EBF0FC',
+          secondary: '#F9FBFF',
           primary: '#E44634',
           accent: '#EA6D5D',
           text: '#1C1C1E',
