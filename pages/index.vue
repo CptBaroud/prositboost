@@ -40,8 +40,10 @@
                 <v-btn
                   color="primary"
                   class="mx-4 my-2"
+                  to="prosits/add"
                 >
-                  Créer un prosit
+                  <span v-if="currentTeam.scribe._id === $auth.user._id">Créer un prosit</span>
+                  <span v-else>Voir le prosit</span>
                 </v-btn>
               </v-card-actions>
             </v-card>
