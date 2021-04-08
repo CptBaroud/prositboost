@@ -4,7 +4,7 @@
   >
     <v-app-bar
       class="px-4 py-4"
-      style="transition: color 0s"
+      style="transition: color 0s; background: transparent !important;"
       fixed
       absolute
       app
@@ -24,7 +24,7 @@
         </v-icon>
       </v-btn>
       <template v-if="$auth.loggedIn">
-        <v-menu open-on-hover bottom offset-y max-height="300">
+        <v-menu open-on-hover bottom offset-y max-height="300" style="background: transparent !important;">
           <template #activator="{ on, attrs }">
             <v-badge
               :content="notification.filter(item => !item.info.seen).length"
@@ -43,7 +43,7 @@
               </v-icon>
             </v-badge>
           </template>
-          <v-list max-width="375">
+          <v-list max-width="375" style="background: transparent !important;">
             <template v-for="(item, a) in notification">
               <notification
                 :id="item._id"
@@ -66,7 +66,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-list color="background" dense rounded class="mr-8">
+        <v-list color="background" dense class="mr-8" style="background: transparent !important;">
           <v-menu open-on-hover bottom offset-y>
             <template #activator="{ on, attrs }">
               <v-list-item
@@ -84,7 +84,7 @@
                 </v-list-item-title>
               </v-list-item>
             </template>
-            <v-list rounded color="secondary">
+            <v-list color="secondary">
               <v-list-item
                 router
                 to="/profil"
@@ -314,11 +314,15 @@ export default {
 
 /*Arriere plan de l'application*/
 .theme--dark.v-application {
-  background-color: var(--v-background-base) !important;
+  background: url('../assets/svg/background_dark.svg') no-repeat center fixed !important;
+  -webkit-background-size: cover !important;
+  background-size: cover !important;
 }
 
 .theme--light.v-application {
-  background-color: var(--v-background-base) !important;
+  background: url('../assets/svg/background_light.svg') no-repeat center fixed !important;
+  -webkit-background-size: cover !important;
+  background-size: cover !important;
 }
 
 /*Couleur du drawer*/

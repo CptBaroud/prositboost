@@ -33,10 +33,10 @@
       <v-col cols="6">
         <v-card
           flat
-          color="background"
+          style="background: transparent"
         >
           <v-card-title>
-            <v-list color="background" width="800">
+            <v-list style="background: transparent" width="800">
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title class="text-h4 mb-2">
@@ -60,7 +60,7 @@
             </template>
           </v-card-title>
           <v-card-text>
-            <v-list color="background">
+            <v-list style="background: transparent">
               <v-list-item class="mb-4">
                 <v-list-item-content>
                   <v-list-item-title class="text-h6 mb-2">

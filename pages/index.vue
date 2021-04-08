@@ -7,11 +7,10 @@
           <v-col cols="12">
             <v-card
               elevation="0"
-              color="secondary"
               :class="$vuetify.theme.dark ? 'card-background-dark' : 'card-background-light'"
               rounded="lg"
             >
-              <v-card-title class="text-md-h5 text-sm-h4 mb-8" style="color: var(--v-text-base)">
+              <v-card-title class="text-md-h5 text-sm-h4 mb-8" style="color: var(--v-text-base);">
                 Bonjour, {{ $auth.user.name }}
               </v-card-title>
               <v-card-text v-if="currentTeam" class="text-md-h6 font-weight-light">

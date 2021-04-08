@@ -14,9 +14,8 @@
       <v-col cols="8">
         <v-card
           :class="scrollbarTheme"
-          style="overflow-y: auto"
+          style="overflow-y: auto; background: transparent"
           rounded="lg"
-          color="background"
           flat
           height="800"
         >
@@ -486,13 +485,13 @@ export default {
 }
 
 .light::-webkit-scrollbar-track {
-  background: #F8F8F8;
-  border-left: 1px solid #F8F8F8;
+  background: transparent;
+  border-left: 1px solid transparent;
 }
 
 .light::-webkit-scrollbar-thumb {
   background: #b0b0b0;
-  border: solid 3px #F8F8F8;
+  border: solid 3px transparent;
   border-radius: 7px;
 }
 
@@ -506,13 +505,13 @@ export default {
 }
 
 .dark::-webkit-scrollbar-track {
-  background: #2C2C2C;
-  border-left: 1px solid #2c2c2c;
+  background: transparent;
+  border-left: 1px solid transparent;
 }
 
 .dark::-webkit-scrollbar-thumb {
   background: #3e3e3e;
-  border: solid 3px #2C2C2C;
+  border: solid 3px transparent;
   border-radius: 7px;
 }
 
