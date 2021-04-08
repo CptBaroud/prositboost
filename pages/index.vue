@@ -374,7 +374,11 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('team/fetchCurrentTeam', { token: this.$auth.getToken('local'), num: this.conf.numProsit })
+    this.$store.dispatch('conf/fetch', { token: this.$auth.getToken('local') }).then(() => {
+      this.$store.dispatch('team/fetchCurrentTeam', { token: this.$auth.getToken('local'), num: this.conf.numProsit })
+    })
+    this.$store.dispatch('prosit/fetch', { token: this.$auth.getToken('local') })
+    this.$store.dispatch('kivaferkoi/fetch', { token: this.$auth.getToken('local') })
   }
 }
 </script>

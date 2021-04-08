@@ -23,12 +23,10 @@ export default {
   },
 
   updateDisplayprosit (state, data) {
-    console.log(data)
     if (!data.action) {
       state.displayProsit[data.type] = data.data
     } else {
       state.displayProsit[data.type] = data.array
     }
-    console.log(state.displayProsit)
   }
 }

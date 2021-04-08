@@ -39,12 +39,12 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title class="text-h4 mb-2">
-                  {{ prosit.title }}
+                  {{ title }}
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <template v-for="(item, i) in prosit.keywords">
+          <template v-for="(item, i) in keywords">
             <v-chip
               :key="i"
               color="primary"
@@ -63,7 +63,7 @@
                   • Contexte
                 </v-list-item-title>
                 <v-list-item-subtitle class="subtitle-1">
-                  {{ prosit.context }}
+                  {{ context }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -72,7 +72,7 @@
                 <v-list-item-title class="text-h6 mb-2">
                   • Contraintes
                 </v-list-item-title>
-                <v-list-item-subtitle v-for="(item, i) in prosit.constraints" :key="i" class="subtitle-1 mb-1">
+                <v-list-item-subtitle v-for="(item, i) in constraints" :key="i" class="subtitle-1 mb-1">
                   {{ item }}
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -83,16 +83,16 @@
                   • Généralisation
                 </v-list-item-title>
                 <v-list-item-subtitle class="subtitle-1">
-                  {{ prosit.generalization }}
+                  {{ generalization }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
             <v-list-item class="mb-4">
-              <v-list-item-content v-if="Array.isArray(prosit.problematics)">
+              <v-list-item-content v-if="Array.isArray(problematics)">
                 <v-list-item-title class="text-h6 mb-2">
                   • Problématiques
                 </v-list-item-title>
-                <v-list-item-subtitle v-for="(item, i) in prosit.problematics" :key="i" class="subtitle-1 mb-1 text--truncate">
+                <v-list-item-subtitle v-for="(item, i) in problematics" :key="i" class="subtitle-1 mb-1 text--truncate">
                   {{ item }}
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -101,7 +101,7 @@
                   • Problématique
                 </v-list-item-title>
                 <v-list-item-subtitle class="subtitle-1">
-                  {{ prosit.problematics[0] }}
+                  {{ problematics[0] }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -110,7 +110,7 @@
                 <v-list-item-title class="text-h6 mb-2">
                   • Hypothèses
                 </v-list-item-title>
-                <v-list-item-subtitle v-for="(item, i) in prosit.hypotesies" :key="i" class="subtitle-1 mb-1">
+                <v-list-item-subtitle v-for="(item, i) in hypotesies" :key="i" class="subtitle-1 mb-1">
                   {{ item }}
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -120,7 +120,7 @@
                 <v-list-item-title class="text-h6 mb-2">
                   • Plan d'action
                 </v-list-item-title>
-                <v-list-item-subtitle v-for="(item, i) in prosit.summary" :key="i" class="subtitle-1 mb-1">
+                <v-list-item-subtitle v-for="(item, i) in summary" :key="i" class="subtitle-1 mb-1">
                   {{ item }}
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -135,16 +135,22 @@
 <script>
 export default {
   name: 'See',
+  data () {
+    return {
+      title: '',
+      keywords: [],
+      constraints: [],
+      context: '',
+      generalization: '',
+      problematics: [],
+      hypotesies: [],
+      summary: []
+    }
+  },
   computed: {
     currentTeam: {
       get () {
         return this.$store.getters['team/currentTeam']
-      }
-    },
-
-    prosit: {
-      get () {
-        return this.$store.getters['prosit/displayProsit']
       }
     },
 
@@ -157,13 +163,17 @@ export default {
       name: 'main'
     })
 
+    this.socket.on('connection', (data) => {
+      console.log(data)
+    })
+
     this.socket.on('prosit', (data) => {
-      this.$store.commit('prosit/updateDisplayprosit', data)
+      if (data.action !== 'push' && data.action !== 'remove') {
+        this.$data[data.type] = data.data
+      } else {
+        this.$data[data.type] = data.array
+      }
     })
   }
 }
 </script>
-
-<style scoped>
-
-</style>
