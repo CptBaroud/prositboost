@@ -24,6 +24,7 @@
             rounded
             type="password"
             label="Mot de passe"
+            @keydown.enter="login"
           />
         </v-form>
       </v-card-text>
@@ -33,7 +34,7 @@
           rounded
           elevation="0"
           color="primary"
-          @click="login()"
+          @click="login"
         >
           Se connecter
         </v-btn>
