@@ -295,7 +295,7 @@ export default {
 
     prosits: {
       get () {
-        return this.$store.getters['prosit/prosits'].filter(object => object._id !== this.$route.params.id)
+        return this.$store.getters['prosit/prositOrder'].filter(object => object._id !== this.$route.params.id)
       }
     },
 

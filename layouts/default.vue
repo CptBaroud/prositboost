@@ -105,9 +105,8 @@
       v-if="$auth.loggedIn"
       v-model="drawer"
       :value="drawer"
-      :mini-variant="miniVariant"
       color="secondary"
-      mini-variant-width="70"
+      floating
       app
       elevation="0"
     >

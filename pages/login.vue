@@ -80,6 +80,7 @@ export default {
         }
       })
         .then((response) => {
+          console.log(this.$route.name)
           if (response.status === 200 && this.$route.name !== '/') {
             this.$router.push('/')
           } else if (response.status !== 200) {

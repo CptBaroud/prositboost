@@ -19,7 +19,7 @@
         </v-chip>
       </template>
       <v-chip
-        v-if="item.keywords.length >= 2 && item.keywords.length >= 3"
+        v-if="item.keywords.length >= 2"
         :color="background === 'secondary' ? 'background' : 'secondary'"
         label
         class="my-1"

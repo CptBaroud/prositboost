@@ -8,6 +8,7 @@
             <v-card
               elevation="0"
               :class="$vuetify.theme.dark ? 'card-background-dark' : 'card-background-light'"
+              color="secondary"
               rounded="lg"
             >
               <v-card-title class="text-md-h5 text-sm-h4 mb-8" style="color: var(--v-text-base);">
@@ -346,7 +347,7 @@ export default {
   computed: {
     prosits: {
       get () {
-        return this.$store.getters['prosit/prosits']
+        return this.$store.getters['prosit/prositOrder']
       }
     },
 

@@ -86,7 +86,7 @@
                   />
                 </v-col>
                 <v-col cols="7">
-                  <v-list v-if="addProsit.constraints.length > 0" color="background">
+                  <v-list v-if="addProsit.constraints.length > 0" style="background: transparent">
                     <v-list-item>
                       <v-list-item-content />
                       <v-list-item-action>
@@ -154,7 +154,7 @@
                   />
                 </v-col>
                 <v-col cols="7">
-                  <v-list v-if="addProsit.problematics.length > 0" color="background">
+                  <v-list v-if="addProsit.problematics.length > 0" style="background: transparent">
                     <v-list-item>
                       <v-list-item-content />
                       <v-list-item-action>
@@ -210,7 +210,7 @@
                   />
                 </v-col>
                 <v-col cols="7">
-                  <v-list v-if="addProsit.hypotesies.length > 0" color="background">
+                  <v-list v-if="addProsit.hypotesies.length > 0" style="background: transparent">
                     <v-list-item>
                       <v-list-item-content />
                       <v-list-item-action>
@@ -266,7 +266,7 @@
                   />
                 </v-col>
                 <v-col cols="7">
-                  <v-list v-if="addProsit.summary.length > 0" color="background">
+                  <v-list v-if="addProsit.summary.length > 0" style="background: transparent">
                     <v-list-item>
                       <v-list-item-content />
                       <v-list-item-action>
@@ -302,6 +302,7 @@
                             auto-grow
                             flat
                             solo
+                            @keydown.enter.exact.prevent=""
                           />
                           <template v-else>
                             <v-chip
@@ -348,8 +349,13 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
+
 export default {
   name: 'Add',
+  comments: {
+    draggable
+  },
   middleware ({ store, redirect }) {
     const isNotAdmin = store.$auth.user.role < 2
     const isNotScribe = store.state.team.currentTeam.scribe._id !== store.$auth.user._id
@@ -392,12 +398,6 @@ export default {
     }
   },
   computed: {
-    prosit: {
-      get () {
-        return this.$store.getters['prosit/prosits']
-      }
-    },
-
     scrollbarTheme () {
       return this.$vuetify.theme.dark ? 'dark' : 'light'
     }
@@ -440,7 +440,7 @@ export default {
       prosit.author = this.$auth.user._id
       // Numéro du prosit (on est dans un tableau donc pour eviter d'avoir un
       // Prosit en 0 on fait +1 et encore +1 pour calculer le numéro du prochain)
-      prosit.prositNumber = this.prosit ? this.prosit.length + 2 : 0
+      prosit.prositNumber = this.prosit ? this.$store.getters['prosit/prosits'].length() + 2 : 0
 
       // Si tout les champs sont valide
       if (this.$refs.addPrositForm.validate()) {

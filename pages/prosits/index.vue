@@ -63,7 +63,7 @@ export default {
   computed: {
     prosits: {
       get () {
-        return this.$store.getters['prosit/prosits']
+        return this.$store.getters['prosit/prositOrder']
       }
     },
 

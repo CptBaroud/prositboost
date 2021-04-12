@@ -174,7 +174,7 @@
                   background-color="background"
                   flat
                   solo
-                  hint="Attention y'a aucune verifications donc si tu te trompe tu pourras plus te connecté et je vais devoir te la changer à la main et ça va me souler"
+                  hint="Attention y'a aucunes verifications donc si tu te trompes tu pourras plus te connecter et je vais devoir te la changer à la main et ça va me soualer"
                   placeholder="Mail"
                 />
               </div>
