@@ -35,7 +35,7 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <!--<v-autocomplete
+                <v-autocomplete
                   :key="'combobox' + i"
                   v-model="item.pickedSummary"
                   :items="prositSummary"
@@ -44,7 +44,7 @@
                   background-color="background"
                   @change="emit({ action: 'select', item: item.pickedSummary, user: item })"
                   @click:clear="emit({action: 'remove', item: item.pickedSummary, user: item})"
-                />-->
+                />
               </template>
             </v-list>
           </v-card-text>
@@ -134,7 +134,8 @@ export default {
 
     picked: {
       get () {
-        return this.$store.getters['kivaferkoi/picked']
+        const out = this.$store.getters['kivaferkoi/picked']
+        return out.slice()
       },
 
       set (value) {
@@ -152,9 +153,8 @@ export default {
       get () {
         if (this.numProsit) {
           const out = []
-          // On récupère le prosit
           this.$store.getters['prosit/prosits']
-            .filter(item => item.prositNumber === this.numProsit)[0].summary
+            .filter(item => item.prositNumber === this.numProsit)[0]?.summary
             // On récupère uniquement les parties incluant une etude
             .filter(item => item.toLowerCase().includes('etude'))
             // On copie ce tableau pour pouvoir le changer a loisir
@@ -162,6 +162,7 @@ export default {
             .forEach((item) => {
               out.push({ text: item, value: item, disabled: false })
             })
+          // On récupère le prosit
           return out
         }
         return []

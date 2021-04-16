@@ -24,12 +24,13 @@ export default {
     delete data.token
 
     return new Promise((resolve, reject) => {
-      axios.get(process.env.api_url + '/team/currentTeam?num=' + data.num, {
+      axios.get(process.env.api_url + '/team/currentTeam?num=' + data.num % 9, {
         headers: {
           Authorization: token
         }
       })
         .then((response) => {
+          console.log(response.data)
           context.commit('setCurrentTeam', response.data)
           resolve(response.data)
         }).catch((onerror) => {

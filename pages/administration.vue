@@ -193,7 +193,7 @@ export default {
       set (value) {
         if (value !== '') {
           this.$store.dispatch('conf/updateNumProsit', { token: this.$auth.getToken('local'), value }).then((resp) => {
-            this.$store.commit('team/getCurentTeam', resp.numProsit)
+            this.$store.dispatch('team/fetchCurrentTeam', { token: this.$auth.getToken('local'), num: resp.numProsit })
           })
         }
       }
